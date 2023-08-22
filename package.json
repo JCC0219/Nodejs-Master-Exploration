@@ -1,0 +1,15 @@
+{
+  "name": "nodejs-exploration",
+  "version": "1.0.0",
+  "description": "NodeJS complete guide",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node \"./1. Basic Understanding/app.js\"",
+    "start1": "node \"./1. Basic Understanding/app.js\""
+
+
+  },
+  "author": "JC C",
+  "license": "ISC"
+}
