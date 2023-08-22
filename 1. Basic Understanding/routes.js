@@ -1,3 +1,5 @@
+//click debug from visual studio and choose NodeJS
+
 const fs = require("fs");
 
 const requestHandler = (req, res) => {
@@ -24,9 +26,9 @@ const requestHandler = (req, res) => {
       //   console.log(chunk.toString());
       body.push(chunk);
     });
-    req.on("end", () => {
-      const parsedBody = Buffer.concat(body).toString(); //retried the data from the form
-      const message = parsedBody.split("=")[1];
+    return req.on("end", () => {
+      const parsedBody = Buffer.concat(body).toString(); //retrieved the data from the form
+      const message = parsedBody. split("=")[1];
       fs.writeFile("message.txt", message, (err) => {
         res.statusCode = 302;
         res.setHeader("Location", "/");
@@ -48,6 +50,6 @@ const requestHandler = (req, res) => {
 module.exports = requestHandler;
 
 module.exports = {
-    handler: requestHandler,
-    someText:"some hard coded text"
-}
+  handler: requestHandler,
+  someText: "some hard coded text",
+};

@@ -5,11 +5,12 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node \"./1. Basic Understanding/app.js\"",
-    "start1": "node \"./1. Basic Understanding/app.js\""
-
-
+    "start": "nodemon \"./1. Basic Understanding/app.js\"",
+    "start1": "nodemon \"./1. Basic Understanding/app.js\""
   },
   "author": "JC C",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
 }
