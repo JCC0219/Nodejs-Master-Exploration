@@ -6,8 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1", 
     "start": "nodemon \"./app.js\"",
-    "start-a1": "nodemon \"./Assginment2/app.js\"",
-    "start-a2": "nodemon \"./Assginment2/app.js\""
+    "start-a1": "nodemon \"./Assignment2/app.js\"",
+    "start-a2": "nodemon \"./Assignment3/app.js\""
+
   },
   "author": "JC C",
   "license": "ISC",
