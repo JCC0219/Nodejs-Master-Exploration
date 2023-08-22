@@ -4,13 +4,20 @@
   "description": "NodeJS complete guide",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon \"./1. Basic Understanding/app.js\"",
-    "start1": "nodemon \"./1. Basic Understanding/app.js\""
+    "test": "echo \"Error: no test specified\" && exit 1", 
+    "start": "nodemon \"./2. Working with Exporess.js/app.js\"",
+    "start1": "nodemon \"./1. Basic Understanding/app.js\"",
+    "start2": "nodemon \"./2. Working with Exporess.js/app.js\"",
+    "start2-a": "nodemon \"./2. Working with Exporess.js/Assginment2/app.js\""
+
+
   },
   "author": "JC C",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
   }
 }
