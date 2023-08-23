@@ -4,20 +4,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const adminData = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
-const expressHbs = require('express-handlebars');
 
 
 //do this before route handling
 const app = express();
 
-// register handlebars as engine
-app.engine('hbs', expressHbs.engine({ layoutsDir: "views/layouts/", defaultLayout: 'main-layout', extname: 'hbs' })); //hbs
-
-
 //to tell node to find which engine to use it
-// app.set("view engine", "pug"); // pug
-app.set("view engine", "hbs"); // handlebar
-
+app.set("view engine", "ejs"); // ejs
 // implements on view
 app.set("views", "views");
 

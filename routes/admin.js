@@ -9,16 +9,13 @@ const products = [];
 Router.get("/add-product", (req, res, next) => {
   ////using traditional HTML
   // res.sendFile(path.join(__dirname, "../", "views", "add-product.html")); //do not code like \jingc\Desktop\Learning\Nodejs-Exploration\ to ensure it can use in any os
-
-  //using pug templating engine
-  // res.render("add-product", { pageTitle: "Add Product" }); //(pug)
-  res.render("add-product", {
-    prods: products,
-    pageTitle: "Add Product",
+  res.render('add-product', {
+    pageTitle: 'Add Product',
+    path: '/admin/add-product',
+    formsCSS: true,
     productCSS: true,
-    formsCSS:true,
-    activeAddProduct: true,
-  }); //(handlebars)
+    activeAddProduct: true
+  });
 });
 
 // /admin/add-product => POST
