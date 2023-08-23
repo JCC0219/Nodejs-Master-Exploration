@@ -5,11 +5,15 @@ const rootDir = require("../util/path");
 const adminData = require("./admin");
 
 Router.get("/", (req, res, next) => {
-  // console.log(path.join(__dirname))
-  // console.log(path.join(__filename))
-  console.log("shop.js",adminData.products); //data is sharing in nodeserver!!!!! no matter in any browser
+  // console.log("shop.js",adminData.products); //data is sharing in nodeserver!!!!! no matter in any browser
+
+  const products = adminData.products;
+
+  ////using traditional HTML
   // res.sendFile(path.join(rootDir, "views", "shop.html"));
-  res.render('shop') //using templating engine
+
+  //using pug templating engine
+  res.render("shop", { prods: products, docTitle: "Shop" });
 });
 
 module.exports = Router;

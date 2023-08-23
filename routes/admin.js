@@ -7,13 +7,15 @@ const products = [];
 
 // /admin/add-product => GET
 Router.get("/add-product", (req, res, next) => {
-  //   console.log("in /add-product the middleware");
-  res.sendFile(path.join(__dirname, "../", "views", "add-product.html")); //do not code like \jingc\Desktop\Learning\Nodejs-Exploration\ to ensure it can use in any os
+  ////using traditional HTML
+  // res.sendFile(path.join(__dirname, "../", "views", "add-product.html")); //do not code like \jingc\Desktop\Learning\Nodejs-Exploration\ to ensure it can use in any os
+
+  //using pug templating engine
+  res.render('add-product',{pageTitle: 'Add Product'})
 });
 
 // /admin/add-product => POST
 Router.post("/add-product", (req, res, next) => {
-  //   console.log("in /product the middleware");
   products.push({title:req.body.title})
   console.log(req.body); //showing undefined
   res.redirect("/");
