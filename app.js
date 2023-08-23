@@ -7,6 +7,11 @@ const shopRoutes = require("./routes/shop");
 
 //do this before route handling
 const app = express();
+
+//to tell node to find pug engine and implements on view
+app.set("view engine", "pug"); // reference to express official doc
+app.set("views", "views");
+
 //parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public"))); // to make the dir accessible to user

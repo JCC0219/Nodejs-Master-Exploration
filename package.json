@@ -4,11 +4,10 @@
   "description": "NodeJS complete guide",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1", 
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon \"./app.js\"",
     "start-a1": "nodemon \"./Assignment2/app.js\"",
     "start-a2": "nodemon \"./Assignment3/app.js\""
-
   },
   "author": "JC C",
   "license": "ISC",
@@ -16,6 +15,9 @@
     "nodemon": "^3.0.1"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
+    "pug": "^3.0.2"
   }
 }

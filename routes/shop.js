@@ -8,7 +8,8 @@ Router.get("/", (req, res, next) => {
   // console.log(path.join(__dirname))
   // console.log(path.join(__filename))
   console.log("shop.js",adminData.products); //data is sharing in nodeserver!!!!! no matter in any browser
-  res.sendFile(path.join(rootDir, "views", "shop.html"));
+  // res.sendFile(path.join(rootDir, "views", "shop.html"));
+  res.render('shop') //using templating engine
 });
 
 module.exports = Router;
