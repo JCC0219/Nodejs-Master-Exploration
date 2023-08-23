@@ -13,7 +13,15 @@ Router.get("/", (req, res, next) => {
   // res.sendFile(path.join(rootDir, "views", "shop.html"));
 
   //using pug templating engine
-  res.render("shop", { prods: products, docTitle: "Shop" });
+  // res.render("shop", { prods: products, docTitle: "Shop" }); //(pug)
+  res.render("shop", {
+    prods: products,
+    docTitle: "Shop",
+    path: "/",
+    hasProducts: products.length > 0,
+    activeShop: true,
+    productCss: true,
+  }); //(handlebars)
 });
 
 module.exports = Router;
