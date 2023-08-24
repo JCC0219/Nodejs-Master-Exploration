@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700");
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   padding: 0;
   margin: 0;
@@ -5,9 +11,10 @@ body {
 }
 main {
   padding: 1rem;
+  margin: auto;
 }
 
-.form {
+form {
   display: inline;
 }
 .centered {
@@ -18,11 +25,13 @@ main {
   height: 3.5rem;
   background-color: rgb(168, 186, 122);
   padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
 }
 
 .main-header__nav {
   height: 100%;
-  display: flex;
+  display: none;
   align-items: center;
 }
 
@@ -166,6 +175,9 @@ main {
 }
 
 .btn {
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  text-decoration: none;
   font: inherit;
   border: 1px solid #00695c;
   color: #00695c;
