@@ -63,12 +63,14 @@ module.exports = class Product {
   static deleteById = (id) => {
     getProductsFromFile((products) => {
       // console.log("find",products)
+      const product = products.find(prod => prod.id === id);
+
       const updatedProduct = products.filter((p) => p.id !== id);
       fs.writeFile(p, JSON.stringify(updatedProduct), (err) => {
         if(!err){
-          Cart.deleteProduct(id);
+          Cart.deleteProduct(id, product.price);
+
         }
-        console.log(err);
       });
     });
   };
