@@ -4,11 +4,20 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
-const errorController = require("./controllers/error")
-
+const errorController = require("./controllers/error");
+const db = require("./util/database");
 
 //do this before route handling
 const app = express();
+
+db.execute("SELECT * FROM products")
+  .then((result) => {
+    console.log(result[0]);
+  })
+
+  .catch((err) => {
+    console.log(err);
+  });
 
 //to tell node to find which engine to use it
 app.set("view engine", "ejs"); // ejs
