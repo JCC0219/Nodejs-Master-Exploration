@@ -1,7 +1,6 @@
 const Cart = require("./cart");
 const db = require("../util/database");
 
-
 module.exports = class Product {
   constructor(id, title, imageUrl, description, price) {
     this.id = id;
@@ -11,13 +10,20 @@ module.exports = class Product {
     this.price = price;
   }
 
-  save = () => {};
+  save = () => {
+    return db.execute(
+      "INSERT INTO products (title,price,imageUrl,description) VALUES (?,?,?,?) ",
+      [this.title, this.price, this.imageUrl, this.description]
+    );
+  };
 
   static fetchAll() {
     return db.execute("SELECT * FROM products");
   }
 
-  static findById = (id) => {};
+  static findById = (id) => {
+    db.execute("SELECT * FROM products WHERE products.id = ?", [id]);
+  };
 
   static deleteById = (id) => {};
 };
