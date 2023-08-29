@@ -13,8 +13,9 @@
   justify-content: space-between;
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  margin-bottom: 1rem;
 }
- 
+
 .cart__item h1,
 .cart__item h2 {
   margin-right: 1rem;

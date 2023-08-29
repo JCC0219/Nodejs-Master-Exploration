@@ -5,6 +5,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session); // pass session arguments from previous import
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -13,8 +14,15 @@ const errorController = require("./controllers/error");
 
 const User = require("./models/user");
 
+const MONGODB_URI =
+  "mongodb+srv://jingcheng060:dQgoIkwLxLRCQmyr@cluster0.v1voybz.mongodb.net/shop?retryWrites=true&w=majority";
+
 //do this before route handling
 const app = express();
+const store = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: "sessions",
+});
 
 //to tell node to find which engine to use it
 app.set("view engine", "ejs"); // ejs
@@ -25,21 +33,35 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public"))); // to make the dir accessible to user
 app.use(
-  session({ secret: "my secret", resave: false, saveUninitialized: false })
+  session({
+    secret: "my secret",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  })
 );
 
-//request data should be put on top to make it runs everytime a request is comming,
-// req.data is independent data for each request
+//Mongoose store doesnot have the methods in mangoose model!!,
+//so we cannot directly use req.session.user to trigger save() find() AnyMethodInModel() method that provided by mongoose model
+//please reinitialize this to take back the mangoose model
 app.use((req, res, next) => {
-  User.findById("64ed5f16bc68b3140b164361")
+  console.log('called')
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
     .then((user) => {
       req.user = user;
+      console.log(req.user.name);
       next();
     })
     .catch((err) => {
       console.log(err);
     });
 });
+
+//request data should be put on top to make it runs everytime a request is comming,
+// req.data is independent data for each request
 
 //top down structure
 app.use("/admin", adminRoutes);

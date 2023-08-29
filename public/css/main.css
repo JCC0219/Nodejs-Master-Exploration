@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700");
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
 
 * {
   box-sizing: border-box;
@@ -7,8 +7,9 @@
 body {
   padding: 0;
   margin: 0;
-  font-family: sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
+
 main {
   padding: 1rem;
   margin: auto;
@@ -17,6 +18,7 @@ main {
 form {
   display: inline;
 }
+
 .centered {
   text-align: center;
 }
@@ -28,10 +30,11 @@ form {
 .image img {
   height: 100%;
 }
+
 .main-header {
   width: 100%;
   height: 3.5rem;
-  background-color: rgb(168, 186, 122);
+  background-color: #00695c;
   padding: 0 1.5rem;
   display: flex;
   align-items: center;
@@ -57,16 +60,24 @@ form {
   padding: 0;
 }
 
-.main-header__item a {
+.main-header__item a,
+.main-header__item button {
+  font: inherit;
+  background: transparent;
+  border: none;
   text-decoration: none;
   color: white;
+  cursor: pointer;
 }
 
 .main-header__item a:hover,
 .main-header__item a:active,
-.main-header__item a.active {
-  color: rgb(45, 64, 140);
+.main-header__item a.active,
+.main-header__item button:hover,
+.main-header__item button:active {
+  color: #ffeb3b;
 }
+
 .mobile-nav {
   width: 30rem;
   height: 100vh;
@@ -143,6 +154,7 @@ form {
   z-index: 5;
   display: none;
 }
+
 .grid {
   display: flex;
   flex-wrap: wrap;
@@ -201,6 +213,18 @@ form {
   background-color: #00695c;
   color: white;
 }
+
+.btn.danger {
+  color: red;
+  border-color: red;
+}
+
+.btn.danger:hover,
+.btn.danger:active {
+  background: red;
+  color: white;
+}
+
 @media (min-width: 768px) {
   .main-header__nav {
     display: flex;
