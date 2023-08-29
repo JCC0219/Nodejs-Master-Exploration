@@ -1,11 +1,14 @@
 // const http = require("http");
+
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const session = require("express-session");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const authRoutes = require("./routes/auth");
 const errorController = require("./controllers/error");
 
 const User = require("./models/user");
@@ -21,7 +24,12 @@ app.set("views", "views");
 //parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public"))); // to make the dir accessible to user
+app.use(
+  session({ secret: "my secret", resave: false, saveUninitialized: false })
+);
 
+//request data should be put on top to make it runs everytime a request is comming,
+// req.data is independent data for each request
 app.use((req, res, next) => {
   User.findById("64ed5f16bc68b3140b164361")
     .then((user) => {
@@ -36,7 +44,7 @@ app.use((req, res, next) => {
 //top down structure
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
-
+app.use(authRoutes);
 app.use(errorController.get404);
 
 // mongoConnect(() => {
@@ -48,8 +56,8 @@ mongoose
     "mongodb+srv://jingcheng060:dQgoIkwLxLRCQmyr@cluster0.v1voybz.mongodb.net/shop?retryWrites=true&w=majority"
   )
   .then((result) => {
-    User.findOne().then(user =>{
-      if(!user){
+    User.findOne().then((user) => {
+      if (!user) {
         const user = new User({
           name: "Max",
           email: "max@test.com",
@@ -57,8 +65,8 @@ mongoose
         });
         user.save();
       }
-    })
-    
+    });
+
     console.log("connected to DB");
     app.listen(3000);
   })
