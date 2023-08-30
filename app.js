@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session); // pass session arguments from previous import
 const csrf = require("csurf");
+const flash = require("connect-flash");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -17,7 +18,6 @@ const User = require("./models/user");
 
 const MONGODB_URI =
   "mongodb+srv://jingcheng060:dQgoIkwLxLRCQmyr@cluster0.v1voybz.mongodb.net/shop?retryWrites=true&w=majority";
-
 //do this before route handling
 const app = express();
 const store = new MongoDBStore({
@@ -43,6 +43,7 @@ app.use(
   })
 );
 app.use(csrfProtection);
+app.use(flash());
 //Mongoose store doesnot have the methods in mangoose model!!,
 //so we cannot directly use req.session.user to trigger save() find() AnyMethodInModel() method that provided by mongoose model
 //please reinitialize this to take back the mangoose model

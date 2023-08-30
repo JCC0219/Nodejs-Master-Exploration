@@ -92,11 +92,32 @@ app.use((req, res, next) => {
 });
 ```
 
-html view page should include code below in every post request(<form>)
+html view page should include code below in every post request(form)
 The name must be `name="_csrf"`. the value csrfToken will retrive automatically from the `res.locals`
 ```html
 <input type="hidden" name="_csrf" value="<%= csrfToken%>">
 ```
 
+## to share data acrros request we can use flash
+When we calling next request like `res.redirect()`, the current data will be alll removed, to share data, flash allow request to share data to next request (can think of a session)
+
+to install flash:
+```bash
+npm install --save flash
+```
+
+to apply flash:
+```javascript
+const flash = require("connect-flash");
+app.use(flash());
+```
+After setup, u can call flash at any controllers, eg:
+
 
 please review the code for more detailed interpretation
+```javascript
+//to invalid message in error variable
+req.flash("error", "Invalid email.");
+//to call the save data
+let message = req.flash("error"); // return array
+```
