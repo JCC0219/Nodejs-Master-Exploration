@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session); // pass session arguments from previous import
+const csrf = require("csurf");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -23,6 +24,7 @@ const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: "sessions",
 });
+const csrfProtection = csrf();
 
 //to tell node to find which engine to use it
 app.set("view engine", "ejs"); // ejs
@@ -40,6 +42,7 @@ app.use(
     store: store,
   })
 );
+app.use(csrfProtection);
 //Mongoose store doesnot have the methods in mangoose model!!,
 //so we cannot directly use req.session.user to trigger save() find() AnyMethodInModel() method that provided by mongoose model
 //please reinitialize this to take back the mangoose model
@@ -57,22 +60,20 @@ app.use((req, res, next) => {
     });
 });
 
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 //request data should be put on top to make it runs everytime a request is comming,
 // req.data is independent data for each request
 
 //top down structure
-app.use("/admin", 
-// (req,res,next)=>{console.log('check admin'); next()},
-adminRoutes);
-app.use(
-  // (req,res,next)=>{console.log('check /'); next()},
-  shopRoutes);
-app.use(
-  // (req,res,next)=>{console.log('check /'); next()},
-authRoutes);
-app.use(
-  // (req,res,next)=>{console.log('check error'); next()},
-  errorController.get404);
+app.use("/admin", adminRoutes);
+app.use(shopRoutes);
+app.use(authRoutes);
+app.use(errorController.get404);
 
 // mongoConnect(() => {
 //   app.listen(3000);

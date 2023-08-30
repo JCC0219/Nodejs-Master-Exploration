@@ -13,9 +13,10 @@ npm install
 npm start
 ```
 
-
 ## Session cookie that accessible to specific user.
+
 ### Browser Cookie Storage and Session Management with Express.js
+
 To enable session management in your Express.js application, use the following npm command:
 
 ```bash
@@ -38,28 +39,64 @@ after this code runs, you would be able to call `req.session` in the controller 
 
 Session data is stored securely as a cookie in the browser. The cookie content is hashed, and a corresponding session entry is maintained in the server's database. However, please note that if the server restarts, session cookies will no longer function as they're stored server-side.
 
-
-Store Session outside of memory
----
+## Store Session outside of memory
 
 To store the session outside of memory (to save server memory), you can use the package `connect-mongodb-session`. Install it using the command:
 
 ```bash
 npm install connect-mongodb-session
 ```
+
 change the create session on `app.js` folder then on `app.use` to:
+
 ```javascript
 app.use(
-  session({ secret: "my secret", resave: false, saveUninitialized: false, store: store })
+  session({
+    secret: "my secret",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  })
 );
 ```
 
 Example of store configuration
+
 ```javascript
 const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: "sessions",
 });
 ```
+
+## to use csrf protection:
+install:
+```bash
+npm install --save csurf
+```
+
+### to import it and apply the middleware
+```javascript
+const csrfProtection = require("csurf");
+const csrfProtection = csrf();
+app.use(csrfProtection);
+```
+
+Before the route configuration in `app.js` run this code to generate token in every render view.
+```javascript
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  console.log(res.locals)
+  next()
+});
+```
+
+html view page should include code below in every post request(<form>)
+The name must be `name="_csrf"`. the value csrfToken will retrive automatically from the `res.locals`
+```html
+<input type="hidden" name="_csrf" value="<%= csrfToken%>">
+```
+
 
 please review the code for more detailed interpretation
