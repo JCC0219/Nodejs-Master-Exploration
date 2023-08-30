@@ -40,12 +40,10 @@ app.use(
     store: store,
   })
 );
-
 //Mongoose store doesnot have the methods in mangoose model!!,
 //so we cannot directly use req.session.user to trigger save() find() AnyMethodInModel() method that provided by mongoose model
 //please reinitialize this to take back the mangoose model
 app.use((req, res, next) => {
-  console.log('called')
   if (!req.session.user) {
     return next();
   }
@@ -78,17 +76,6 @@ mongoose
     "mongodb+srv://jingcheng060:dQgoIkwLxLRCQmyr@cluster0.v1voybz.mongodb.net/shop?retryWrites=true&w=majority"
   )
   .then((result) => {
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: "Max",
-          email: "max@test.com",
-          cart: { items: [] },
-        });
-        user.save();
-      }
-    });
-
     console.log("connected to DB");
     app.listen(3000);
   })
