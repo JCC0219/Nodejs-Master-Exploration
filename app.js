@@ -50,7 +50,6 @@ app.use((req, res, next) => {
   User.findById(req.session.user._id)
     .then((user) => {
       req.user = user;
-      console.log(req.user.name);
       next();
     })
     .catch((err) => {
@@ -62,10 +61,18 @@ app.use((req, res, next) => {
 // req.data is independent data for each request
 
 //top down structure
-app.use("/admin", adminRoutes);
-app.use(shopRoutes);
-app.use(authRoutes);
-app.use(errorController.get404);
+app.use("/admin", 
+// (req,res,next)=>{console.log('check admin'); next()},
+adminRoutes);
+app.use(
+  // (req,res,next)=>{console.log('check /'); next()},
+  shopRoutes);
+app.use(
+  // (req,res,next)=>{console.log('check /'); next()},
+authRoutes);
+app.use(
+  // (req,res,next)=>{console.log('check error'); next()},
+  errorController.get404);
 
 // mongoConnect(() => {
 //   app.listen(3000);

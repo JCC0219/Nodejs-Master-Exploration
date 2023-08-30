@@ -3,21 +3,22 @@ const path = require("path");
 const productsController = require("../controllers/admin");
 const Router = express.Router();
 
+const isAuth = require("../middleware/is-auth");
 
 // /admin/add-product => GET
-Router.get("/add-product",productsController.getAddProduct);
+// request will pass from left to right ( it will first go is auth and then only go to controller)
+Router.get("/add-product", isAuth, productsController.getAddProduct);
 
 // /admin/products => GET
-Router.get('/products',productsController.getProducts);
+Router.get("/products",isAuth, productsController.getProducts);
 
 // /admin/add-product => POST
-Router.post("/add-product", productsController.postAddProduct);
+Router.post("/add-product",isAuth, productsController.postAddProduct);
 
-Router.get("/edit-product/:productId",productsController.getEditProduct);
+Router.get("/edit-product/:productId", isAuth,productsController.getEditProduct);
 
-Router.post('/edit-product',productsController.postEditProduct);
+Router.post("/edit-product",isAuth, productsController.postEditProduct);
 
-Router.post('/delete-product',productsController.postDeleteProduct)
+Router.post("/delete-product",isAuth, productsController.postDeleteProduct);
 
-
-module.exports = Router
+module.exports = Router;

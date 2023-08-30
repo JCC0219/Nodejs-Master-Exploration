@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const bcrypt = require("bcryptjs");
 
 exports.getLogin = (req, res, next) => {
   //session cookie is stored in the serverside, once server restart cookie wont work
@@ -18,16 +19,30 @@ exports.getSignup = (req, res, next) => {
 };
 
 exports.postLogin = (req, res, next) => {
-  User.findById("64ed5f16bc68b3140b164361")
+  const email = req.body.email;
+  const password = req.body.password;
+  User.findOne({ email: email })
     .then((user) => {
-      req.session.user = user;
-      req.session.isLoggedIn = true;
-      // req.session.save(()=>{
-      //   res.redirect('/')
-      // })
-    })
-    .then(() => {
-      res.redirect("/");
+      if (!user) {
+        return res.redirect("/login");
+      }
+      bcrypt
+        .compare(password, user.password)
+        .then((doMatch) => {
+          if (doMatch) {
+            req.session.user = user;
+            req.session.isLoggedIn = true;
+            return req.session.save((err) => {
+              console.log(err);
+              res.redirect("/");
+            });
+          }
+          res.redirect("/login");
+        })
+        .catch((err) => {
+          console.log(err);
+          res.redirect("/login");
+        });
     })
     .catch((err) => {
       console.log(err);
@@ -39,28 +54,32 @@ exports.postSignup = (req, res, next) => {
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
 
-  User.findOne({ email: email })
-    .then((userDoc) => {
-      if (userDoc) {
-        return res.redirect("/signup");
-      }
-      const user = new User({
-        email: email,
-        password: password,
-        cart:{items:[]}
+  User.findOne({ email: email }).then((userDoc) => {
+    if (userDoc) {
+      return res.redirect("signup");
+    }
+    return bcrypt
+      .hash(password, 12)
+      .then((hashedPassword) => {
+        const user = new User({
+          email: email,
+          password: hashedPassword,
+          cart: { items: [] },
+        });
+        return user.save();
+      })
+      .then((result) => {
+        res.redirect("/login");
+      })
+      .catch((err) => {
+        console.log(err);
       });
-      return user.save();
-    }).then(result=>{
-      res.redirect('login')
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  });
 };
 
 exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
-    console.log("123123123123123123123", err);
+    console.log(err);
     res.redirect("/");
   });
 };
