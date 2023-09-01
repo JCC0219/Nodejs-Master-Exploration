@@ -3,13 +3,12 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
-const { userInfo } = require("os");
 
 const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
       api_key:
-        "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",
+        "<your api key>",
     },
   })
 );
@@ -104,7 +103,7 @@ exports.postSignup = (req, res, next) => {
 
           return transporter.sendMail({
             to: email,
-            from: "jingcheng070@gmail.com",
+            from: "<your email>",
             subject: "Signup succeeded!",
             html: "<h1>You have successfully signed up!</h1>",
           });
@@ -120,7 +119,7 @@ exports.postSignup = (req, res, next) => {
 
 exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
-    console.log(err);
+    // console.log(err);
     res.redirect("/");
   });
 };

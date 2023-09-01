@@ -4,6 +4,8 @@
 
 2. Modify the code at `utils/database.js` to use your own database connection link.
 
+3. edit the sendgird apikeys , details can be view at code below [SendGrid Confiugration](#add-simple-sending-email-function)
+
 ## Running the Application
 
 1. Install the required dependencies using the command:
@@ -70,12 +72,15 @@ const store = new MongoDBStore({
 ```
 
 ## to use csrf protection:
+
 install:
+
 ```bash
 npm install --save csurf
 ```
 
 ### to import it and apply the middleware
+
 ```javascript
 const csrfProtection = require("csurf");
 const csrfProtection = csrf();
@@ -83,41 +88,83 @@ app.use(csrfProtection);
 ```
 
 Before the route configuration in `app.js` run this code to generate token in every render view.
+
 ```javascript
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();
-  console.log(res.locals)
-  next()
+  console.log(res.locals);
+  next();
 });
 ```
 
 html view page should include code below in every post request(form)
 The name must be `name="_csrf"`. the value csrfToken will retrive automatically from the `res.locals`
+
 ```html
-<input type="hidden" name="_csrf" value="<%= csrfToken%>">
+<input type="hidden" name="_csrf" value="<%= csrfToken%>" />
 ```
 
 ## to share data acrros request we can use flash
+
 When we calling next request like `res.redirect()`, the current data will be alll removed, to share data, flash allow request to share data to next request (can think of a session)
 
 to install flash:
+
 ```bash
 npm install --save flash
 ```
 
 to apply flash:
+
 ```javascript
 const flash = require("connect-flash");
 app.use(flash());
 ```
+
 After setup, u can call flash at any controllers, eg:
 
-
 please review the code for more detailed interpretation
+
 ```javascript
 //to invalid message in error variable
 req.flash("error", "Invalid email.");
 //to call the save data
 let message = req.flash("error"); // return array
+```
+
+## Add Simple sending email function:
+
+Installation:
+
+```bash
+npm install --save nodemailer nodemailer-sendgrid-transport
+```
+
+Setting up
+
+1. Set up your sendgrid from [SendGrid](<https://sendgrid.com/?utm_source=google&utm_medium=cpc&utm_term=sendgrid&utm_campaign=SendGrid_G_S_APAC_Brand_(English)&gclid=Cj0KCQjwl8anBhCFARIsAKbbpyRDZcv1PTU8JTczuDKYhupd4roLhwahdCjZqKqg86h_fYZHxdIKmSEaAmzGEALw_wcB>).
+2. Copy the api keys import to you project
+
+```javascript
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      api_key: "<Your sendgrid api key>",
+    },
+  })
+);
+```
+
+3. To send eail
+
+```javascript
+transporter.sendMail({
+  to: email,
+  from: "<Your email>",
+  subject: "Signup succeeded!",
+  html: "<h1>You have successfully signed up!</h1>",
+});
 ```
