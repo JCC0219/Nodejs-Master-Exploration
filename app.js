@@ -44,7 +44,7 @@ app.use(
 );
 app.use(csrfProtection);
 app.use(flash());
-//Mongoose store doesnot have the methods in mangoose model!!,
+//Mongoose store does not have the methods in mangoose model!!,
 //so we cannot directly use req.session.user to trigger save() find() AnyMethodInModel() method that provided by mongoose model
 //please reinitialize this to take back the mangoose model
 app.use((req, res, next) => {
@@ -61,6 +61,7 @@ app.use((req, res, next) => {
     });
 });
 
+//res.locals.to set a common attribute in every res.render
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
   res.locals.csrfToken = req.csrfToken();

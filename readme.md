@@ -168,3 +168,11 @@ transporter.sendMail({
   html: "<h1>You have successfully signed up!</h1>",
 });
 ```
+
+
+## Validation package on node server
+
+```bash
+npm install --save express-validator
+```
+
