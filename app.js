@@ -8,6 +8,7 @@ const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session); // pass session arguments from previous import
 const csrf = require("csurf");
 const flash = require("connect-flash");
+const multer = require("multer");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -25,6 +26,31 @@ const store = new MongoDBStore({
   collection: "sessions",
 });
 const csrfProtection = csrf();
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename:function (req, file, cb) {
+    console.log(req.session)
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+
+    // cb(null, new Date().toISOString() + '-' + file.originalname);
+
+    cb(null, uniqueSuffix + "-" + file.originalname);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg" ||
+    file.mimetype === "image/jpeg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
 
 //to tell node to find which engine to use it
 app.set("view engine", "ejs"); // ejs
@@ -33,7 +59,11 @@ app.set("views", "views");
 
 //parser
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+);
 app.use(express.static(path.join(__dirname, "public"))); // to make the dir accessible to user
+app.use('/images',express.static(path.join(__dirname, "images"))); // to make the dir accessible to images
 app.use(
   session({
     secret: "my secret",
@@ -70,8 +100,6 @@ app.use((req, res, next) => {
       next(new Error(err));
     });
 });
-
-
 
 //request data should be put on top to make it runs everytime a request is comming,
 // req.data is independent data for each request

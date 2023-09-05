@@ -6,6 +6,7 @@
 
 3. edit the sendgird apikeys , details can be view at code below [SendGrid Confiugration](#add-simple-sending-email-function)
 
+
 ## Running the Application
 
 1. Install the required dependencies using the command:
@@ -14,6 +15,9 @@
 npm install
 npm start
 ```
+
+## shortcut
+- [To see how upload & download file work](#uploading-file)
 
 ## Session cookie that accessible to specific user.
 
@@ -174,5 +178,39 @@ transporter.sendMail({
 
 ```bash
 npm install --save express-validator
+```
+
+## How To Upload and Returning file?
+### Uploading File
+body parser only handle string value, but not file, to handle file we need to 
+1. install a thrid party package:
+```bash
+npm install --save multer
+```
+2. set the enctype in form tag  with ``multipart/form-data``
+```html
+ <form action="Your action" method="POST" enctype="multipart/form-data">
+```
+
+3. apply the middleware in ``app.js`` file after bodyparser check out [documentation](https://www.npmjs.com/package/multer) for more detail
+```js app.js
+//import
+const multer = require('multer')
+
+//configure filename and where to store it
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.filename + "-" + file.originalname);
+  },
+});
+
+//apply multer
+app.use(multer({dest: ""}).single('image')) //dest : where to store file the string name must be same with the html element given name in a form
+
+//in the controller use this to retrieve the data from multer
+req.file
 ```
 

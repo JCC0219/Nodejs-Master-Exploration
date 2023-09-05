@@ -1,5 +1,4 @@
 const express = require("express");
-const path = require("path");
 const productsController = require("../controllers/admin");
 const Router = express.Router();
 const { body } = require("express-validator");
@@ -17,7 +16,6 @@ Router.post(
   "/add-product",
   [
     body("title").isString().isLength({ min: 3 }).trim(),
-    body("imageUrl").isURL(),
     body("price").isFloat(),
     body("description").isLength({ min: 5, max: 400 }).trim(),
   ],
@@ -35,7 +33,6 @@ Router.post(
   "/edit-product",
   [
     body("title").isString().isLength({ min: 3 }).trim(),
-    body("imageUrl").isURL(),
     body("price").isFloat(),
     body("description").isLength({ min: 5, max: 400 }).trim(),
   ],
