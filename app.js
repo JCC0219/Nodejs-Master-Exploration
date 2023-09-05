@@ -44,6 +44,13 @@ app.use(
 );
 app.use(csrfProtection);
 app.use(flash());
+
+//res.locals.to set a common attribute in every res.render
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
 //Mongoose store does not have the methods in mangoose model!!,
 //so we cannot directly use req.session.user to trigger save() find() AnyMethodInModel() method that provided by mongoose model
 //please reinitialize this to take back the mangoose model
@@ -53,20 +60,18 @@ app.use((req, res, next) => {
   }
   User.findById(req.session.user._id)
     .then((user) => {
+      if (!user) {
+        return next();
+      }
       req.user = user;
       next();
     })
     .catch((err) => {
-      console.log(err);
+      next(new Error(err));
     });
 });
 
-//res.locals.to set a common attribute in every res.render
-app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.session.isLoggedIn;
-  res.locals.csrfToken = req.csrfToken();
-  next();
-});
+
 
 //request data should be put on top to make it runs everytime a request is comming,
 // req.data is independent data for each request
@@ -75,11 +80,23 @@ app.use((req, res, next) => {
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
+
+app.get("/500", errorController.get500);
+
 app.use(errorController.get404);
 
 // mongoConnect(() => {
 //   app.listen(3000);
 // });
+
+//error handling middleware
+app.use((error, req, res, next) => {
+  res.status(500).render("500", {
+    pageTitle: "Error!",
+    path: "/500",
+    // isAuthenticated: req.session.isLoggedIn,
+  });
+});
 
 mongoose
   .connect(
