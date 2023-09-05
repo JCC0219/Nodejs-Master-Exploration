@@ -202,13 +202,14 @@ const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "images");
   },
-  filename: (req, file, cb) => {
-    cb(null, file.filename + "-" + file.originalname);
+  filename:function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix + "-" + file.originalname);
   },
 });
 
 //apply multer
-app.use(multer({dest: ""}).single('image')) //dest : where to store file the string name must be same with the html element given name in a form
+app.use(multer({storage: fileStorage, fileFilter:fileFilter}).single('image')) //dest : where to store file the string name must be same with the html element given name in a form
 
 //in the controller use this to retrieve the data from multer
 req.file
