@@ -2,11 +2,21 @@
 
 1. To run this code, please configure a MongoDB Atlas database from [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register).
 
-2. Modify the code at `utils/database.js` to use your own database connection link.
+2. Modify the code at `app.js` to use your own database connection link.
+
+```js
+mongoose
+  .connect("<paste your database api key here>")
+  .then((result) => {
+    console.log("connected to DB");
+    app.listen(3000);
+  })
+  .catch((err) => console.log(err));
+```
 
 3. edit the sendgird apikeys , details can be view at code below [SendGrid Confiugration](#add-simple-sending-email-function)
 
-## Running the Application
+## Run the Application
 
 1. Install the required dependencies using the command:
 
@@ -17,7 +27,19 @@ npm start
 
 ## shortcut
 
+- [Session Cookie Using express-session](#session-cookie-that-accessible-to-specific-user)
+
+- [Csurf Protection](#csrf-protection)
+
+- [Share data across request using flash](#to-share-data-across-request-using-flash)
+
+- [Add Simple sending email](#add-simple-sending-email-function-using-sendgrid)
+  V
+- [Validation package on node server](#validation-package-on-node-server)
+
 - [To see how upload & download file work](#how-to-upload-and-returning-file)
+
+- [PDFkit to generate pdf](#pdfkit-for-pdf-generation)
 
 ## Session cookie that accessible to specific user.
 
@@ -75,7 +97,7 @@ const store = new MongoDBStore({
 });
 ```
 
-## to use csrf protection:
+## csrf protection:
 
 install:
 
@@ -109,7 +131,7 @@ The name must be `name="_csrf"`. the value csrfToken will retrive automatically 
 <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
 ```
 
-## to share data acrros request we can use flash
+## To share data Across Request using flash
 
 When we calling next request like `res.redirect()`, the current data will be alll removed, to share data, flash allow request to share data to next request (can think of a session)
 
@@ -137,7 +159,7 @@ req.flash("error", "Invalid email.");
 let message = req.flash("error"); // return array
 ```
 
-## Add Simple sending email function:
+## Add Simple sending email function Using SendGrid:
 
 Installation:
 
@@ -175,8 +197,44 @@ transporter.sendMail({
 
 ## Validation package on node server
 
+1. install package,checkout the [official documentation](https://express-validator.github.io/docs/api/validation-result/)
+
 ```bash
 npm install --save express-validator
+```
+
+2. configure validation (Example as below:)
+
+```js
+//import
+const { body } = require("express-validator");
+
+// /admin/add-product => POST
+Router.post(
+  "/add-product",
+  [
+    body("title").isString().isLength({ min: 3 }).trim(),
+    body("price").isFloat(),
+    body("description").isLength({ min: 5, max: 400 }).trim(),
+  ],
+  isAuth,
+  productsController.postAddProduct
+);
+```
+
+2. retrieve the result of validation (Example as below:)
+
+```js
+//import
+const { validationResult } = require("express-validator");
+
+//retrieve the validation result through request
+exports.postAddProduct = (req, res, next) => {
+  const errors = validationResult(req); //.array() to return an list of errors
+  //....
+  //....
+  //rest of codes
+};
 ```
 
 ## How To Upload and Returning file?
@@ -240,7 +298,7 @@ const PDFDocument = require("pdfkit");
 //implementation
 const pdfDoc = new PDFDocument();
 res.setHeader("Content-Type", "application/pdf");
-res.setHeader("Content-Disposition", 'inline; filename="invoice.pdf"'); 
+res.setHeader("Content-Disposition", 'inline; filename="invoice.pdf"');
 pdfDoc.pipe(fs.createWriteStream(invoicePath));
 pdfDoc.pipe(res);
 pdfDoc.text("Hello World");
