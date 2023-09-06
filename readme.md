@@ -41,6 +41,8 @@ npm start
 
 - [PDFkit to generate pdf](#pdfkit-for-pdf-generation)
 
+- [Adding Payment Using Stripe](#adding-payment-using-stripe)
+
 ## Session cookie that accessible to specific user.
 
 ### Browser Cookie Storage and Session Management with Express.js
@@ -303,4 +305,83 @@ pdfDoc.pipe(fs.createWriteStream(invoicePath));
 pdfDoc.pipe(res);
 pdfDoc.text("Hello World");
 pdfDoc.end();
+```
+
+## Adding Payment Using Stripe
+
+#### You can checkout the [official link](https://stripe.com/en-my) and the stripe [documentation with ESmodule stipe.js](https://stripe.com/docs/libraries/stripejs-esmodule)
+
+#### **On front end**
+
+1. load the strpe script in HTML
+
+```HTML
+ <head>
+  <title>Checkout</title>
+  <script src="https://js.stripe.com/v3/" async></script>
+</head>
+```
+
+2. Stripe.js constructor
+
+```html
+<script>
+  var stripe = Stripe("<api publishable key>");
+</script>
+```
+
+3. Add event listener on your view, to call to backend
+
+```html
+<script>
+  var orderBtn = document.getElementById("order-btn");
+  orderBtn.addEventListener("click", () => {
+    stripe.redirectToCheckout({
+      sessionId: "<%= sessionId %>",
+    });
+  });
+</script>
+```
+
+#### **On back end**
+
+1. install npm package in node server
+
+```bash 
+npm install --save stripe
+```
+
+2. import stripe on your node server
+
+```js
+const express = require("express");
+// This is your test secret API key.
+const stripe = require("stripe")("<your secret key>");
+```
+
+3. create session at The correspond GET request of the page, Example:
+
+```js
+const session = stripe.checkout.sessions.create({
+  line_items: [
+    {
+        price_data: {
+        currency: "usd",
+        unit_amount: 2000,
+        product_data: {
+          name: "T-shirt",
+          description: "Comfortable cotton t-shirt",
+        },
+      },
+      quantity: 1,
+    },
+  ],
+  mode: "payment",
+  success_url: "https://example.com/success?sessionId={CHECKOUT_SESSION_ID}",
+  cancel_url: "https://example.com/cancel",
+});
+//.....
+//..... rest of your code 
+//remember then the session.id back to front end view 
+//sessionId: session.id
 ```
