@@ -1,7 +1,7 @@
 /node_modules/
 /images/
-
-
-
 /auth_js_message.txt
 **/old.js
+/access.log
+/nodemon.json
+readme.md

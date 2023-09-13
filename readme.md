@@ -43,6 +43,20 @@ npm start
 
 - [Adding Payment Using Stripe](#adding-payment-using-stripe)
 
+- [Deployment](#deployment)
+
+-[## Set up process env](#set-up-process-env)
+
+-[## Secure response Header with Helmet](#secure-response-header-with-helmet)
+
+-[## Setting up compression](#setting-up-compression)
+
+-[## Setting up Logging Request](#setting-up-ssltls)
+
+-[Setting up SSL/TLS](#setting-up-ssltls)
+
+
+
 ## Session cookie that accessible to specific user.
 
 ### Browser Cookie Storage and Session Management with Express.js
@@ -406,7 +420,7 @@ npm install --save cross-env
  console.log(process.env.FIRST_ENV) // one
 ```
 
-## secure response Header with Helmet
+## Secure response Header with Helmet
 
 1. Go through [Official documentation](https://helmetjs.github.io/) to have better implementation
 
@@ -424,3 +438,72 @@ import helmet from "helmet";
 // Use Helmet!
 app.use(helmet());
 ```
+## Setting up compression
+Please Note that hosting provider would typically provide us with their compresion
+
+See the [official doc](https://www.npmjs.com/package/compression)
+Below is the basic implementation
+
+1. installation
+```bash
+npm install --save compression
+```
+
+2. implementation
+```js
+//app.js
+const compression = require('compression')
+
+// compress all responses
+app.use(compression())
+```
+
+## Setting up Logging Request
+Please Note that hosting provider would typically provide us with their logging request
+See the [official doc](https://www.npmjs.com/package/morgan)
+Below is the basic implementation
+
+1. installation
+```bash
+npm install --save morgan
+```
+
+2. implementation
+```js
+//app.js
+const morgan = require('morgan')
+
+//write log requests into a log file
+app.use(morgan("combined",{stream: accessLogStream}));
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+
+```
+## Setting up SSL/TLS
+Please Note that hosting provider would typically set their own ssl
+1. If using window, donwload openssl [here](https://slproweb.com/products/Win32OpenSSL.html)
+```bash
+openssl req -nodes -new -x509 -keyout server.key -out server.cert
+# fill the **common name** as he domain name eg: localhost
+
+# a cert, and a key files will generated
+```
+
+2. configuration on **app.js**
+
+```js
+//import htps
+const https = require("https");
+
+//read pk and cert file
+const privateKey = fs.readFileSync("server.key");
+const certificate = fs.readdirSync("server.cert");
+
+//chenge the app.listen to
+    https
+      .createServer({ key: privateKey, cert: certificate }, app)
+      .listen(process.env.PORT || 3000);
+```
+

@@ -1,6 +1,9 @@
 // const http = require("http");
 
 const path = require("path");
+const fs = require("fs");
+const https = require("https");
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -9,7 +12,9 @@ const MongoDBStore = require("connect-mongodb-session")(session); // pass sessio
 const csrf = require("csurf");
 const flash = require("connect-flash");
 const multer = require("multer");
-const helmet = require('helmet')
+const helmet = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -28,6 +33,10 @@ const store = new MongoDBStore({
   collection: "sessions",
 });
 const csrfProtection = csrf();
+
+const privateKey = fs.readFileSync("server.key");
+const certificate = fs.readFileSync("server.cert");
+
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "images");
@@ -58,7 +67,25 @@ app.set("view engine", "ejs"); // ejs
 // implements on view
 app.set("views", "views");
 
-app.use(helmet())
+app.use(
+  helmet.contentSecurityPolicy({
+      directives: {
+          'default-src': ["'self'"],
+          'script-src': ["'self'", "'unsafe-inline'", 'js.stripe.com'],
+          'style-src': ["'self'", "'unsafe-inline'", 'fonts.googleapis.com'],
+          'frame-src': ["'self'", 'js.stripe.com'],
+          'font-src': ["'self'", 'fonts.googleapis.com', 'fonts.gstatic.com']
+      },
+  })
+)
+app.use(compression());
+//write log requests into a log file
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+app.use(morgan("combined", { stream: accessLogStream }));
+
 //parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
@@ -133,6 +160,10 @@ mongoose
   .connect(MONGODB_URI)
   .then((result) => {
     console.log("connected to DB");
-    app.listen(process.env.PORT || 3000);
+    // https
+    //   .createServer({ key: privateKey, cert: certificate }, app)
+    //   .listen(process.env.PORT || 3000);
+      app.listen(process.env.PORT || 3000);
+
   })
   .catch((err) => console.log(err));
