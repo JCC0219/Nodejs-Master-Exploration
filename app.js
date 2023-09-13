@@ -9,6 +9,7 @@ const MongoDBStore = require("connect-mongodb-session")(session); // pass sessio
 const csrf = require("csurf");
 const flash = require("connect-flash");
 const multer = require("multer");
+const helmet = require('helmet')
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -17,8 +18,9 @@ const errorController = require("./controllers/error");
 
 const User = require("./models/user");
 
-const MONGODB_URI =
-  "mongodb+srv://jingcheng060:dQgoIkwLxLRCQmyr@cluster0.v1voybz.mongodb.net/shop?retryWrites=true&w=majority";
+console.log(process.env.MONGO_USER);
+
+const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.v1voybz.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true&w=majority`;
 //do this before route handling
 const app = express();
 const store = new MongoDBStore({
@@ -56,13 +58,14 @@ app.set("view engine", "ejs"); // ejs
 // implements on view
 app.set("views", "views");
 
+app.use(helmet())
 //parser
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
-app.use(express.static(path.join(__dirname, "public"))); // to make the dir accessible to user
-app.use("/images", express.static(path.join(__dirname, "images"))); // to make the dir accessible to images
+app.use(express.static(path.join(__dirname, "public"))); // to make dir accessible to user
+app.use("/images", express.static(path.join(__dirname, "images"))); // to make images dir accessible to user
 app.use(
   session({
     secret: "my secret",
@@ -118,7 +121,7 @@ app.use(errorController.get404);
 
 //error handling middleware
 app.use((error, req, res, next) => {
-  console.log(error)
+  console.log(error);
   res.status(500).render("500", {
     pageTitle: "Error!",
     path: "/500",
@@ -127,11 +130,9 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(
-    "mongodb+srv://jingcheng060:dQgoIkwLxLRCQmyr@cluster0.v1voybz.mongodb.net/shop?retryWrites=true&w=majority"
-  )
+  .connect(MONGODB_URI)
   .then((result) => {
     console.log("connected to DB");
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
   })
   .catch((err) => console.log(err));

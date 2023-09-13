@@ -347,7 +347,7 @@ pdfDoc.end();
 
 1. install npm package in node server
 
-```bash 
+```bash
 npm install --save stripe
 ```
 
@@ -365,7 +365,7 @@ const stripe = require("stripe")("<your secret key>");
 const session = stripe.checkout.sessions.create({
   line_items: [
     {
-        price_data: {
+      price_data: {
         currency: "usd",
         unit_amount: 2000,
         product_data: {
@@ -381,7 +381,46 @@ const session = stripe.checkout.sessions.create({
   cancel_url: "https://example.com/cancel",
 });
 //.....
-//..... rest of your code 
-//remember then the session.id back to front end view 
+//..... rest of your code
+//remember then the session.id back to front end view
 //sessionId: session.id
+```
+
+# deployment
+
+## Set up process env
+
+1. install cross enviroment package [official doc](https://www.npmjs.com/package/cross-env)
+
+```bash
+npm install --save cross-env
+```
+
+2. implementation on package .json eg:
+
+```js
+"build": "cross-env NODE_ENV=production FIRST_ENV=one SECOND_ENV=two node ./my-program"
+
+//when run npm build, the variable will be set into enviroment variable process.env
+//example in app.js
+ console.log(process.env.FIRST_ENV) // one
+```
+
+## secure response Header with Helmet
+
+1. Go through [Official documentation](https://helmetjs.github.io/) to have better implementation
+
+2. installation
+
+```bash
+ npm install --save helmet
+```
+
+3. configuration
+
+```js
+import helmet from "helmet";
+
+// Use Helmet!
+app.use(helmet());
 ```

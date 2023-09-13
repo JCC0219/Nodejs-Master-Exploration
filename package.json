@@ -5,9 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon \"./app.js\"",
-    "start-a1": "nodemon \"./Assignment2/app.js\"",
-    "start-a2": "nodemon \"./Assignment3/app.js\""
+    "start": "cross-env NODE_ENV=production MONGO_USER=jingcheng060 MONGO_PASSWORD=dQgoIkwLxLRCQmyr MONGO_DEFAULT_DATABASE=shop STRIPE_KEY=sk_test_51NnHv4KFMFiAcYbt12KqENB1OD4eYMVyrSovS4xrQ5Rta0FjhGiWusmG303RXBCOyNQK5dUdVsNrjg813wQWMRDF00m6cZP1tv node \"./app.js\"",
+    "start:dev": "nodemon app.js"
   },
   "author": "JC C",
   "license": "ISC",
@@ -18,12 +17,14 @@
     "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^3.1.1",
+    "cross-env": "^7.0.3",
     "csurf": "^1.11.0",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2",
     "express-session": "^1.17.3",
     "express-validator": "^7.0.1",
+    "helmet": "^7.0.0",
     "mongodb": "^5.8.1",
     "mongoose": "^7.4.5",
     "multer": "^1.4.5-lts.1",

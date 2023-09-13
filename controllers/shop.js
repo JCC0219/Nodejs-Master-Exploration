@@ -1,8 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const stripe = require("stripe")(
-  "<your secret key>"
-);
+const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 const Product = require("../models/product");
 const Order = require("../models/order");
@@ -234,7 +232,7 @@ exports.getCheckout = (req, res, next) => {
             quantity: p.quantity,
           };
         }),
-        mode: 'payment',
+        mode: "payment",
         success_url:
           //http + :// + localhost:3000 + /checkout/success
           req.protocol + "://" + req.get("host") + "/checkout/success",
