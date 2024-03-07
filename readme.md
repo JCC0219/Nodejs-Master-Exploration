@@ -34,7 +34,7 @@ npm start
 - [Share data across request using flash](#to-share-data-across-request-using-flash)
 
 - [Add Simple sending email](#add-simple-sending-email-function-using-sendgrid)
-  V
+  
 - [Validation package on node server](#validation-package-on-node-server)
 
 - [To see how upload & download file work](#how-to-upload-and-returning-file)
@@ -45,13 +45,13 @@ npm start
 
 - [Deployment](#deployment)
 
--[## Set up process env](#set-up-process-env)
+-[Set up process env](#set-up-process-env)
 
--[## Secure response Header with Helmet](#secure-response-header-with-helmet)
+-[Secure response Header with Helmet](#secure-response-header-with-helmet)
 
--[## Setting up compression](#setting-up-compression)
+-[Setting up compression](#setting-up-compression)
 
--[## Setting up Logging Request](#setting-up-ssltls)
+-[Setting up Logging Request](#setting-up-ssltls)
 
 -[Setting up SSL/TLS](#setting-up-ssltls)
 
